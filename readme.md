@@ -3,7 +3,7 @@ This can be used to test the card switching application without access to a supp
 No documentation or support is provided except for the contents below.
 
 ## Usage
-- On the release page, locate and download the latest version for your platform.
+- On the [releases](https://github.com/aspriddell/amnet-test-server/releases) page, locate and download the latest version for your platform.
 - Run the executable without any arguments. The server will be available at `http://<your-ip-address>:6070`, which should be entered in the switcher app.
 
 ### macOS
