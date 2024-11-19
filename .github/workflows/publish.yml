@@ -1,0 +1,35 @@
+name: Publish Server
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - { target: win-x64, os: windows-latest, outname: amnet-server.exe }
+          - { target: win-arm64, os: windows-latest, outname: amnet-server.exe }
+          - { target: osx-arm64, os: macos-latest, outname: amnet-server }
+          - { target: osx-x64, os: macos-latest, outname: amnet-server }
+          - { target: linux-x64, os: ubuntu-latest, outname: amnet-server }
+          - { target: linux-arm64, os: ubuntu-latest, outname: amnet-server }
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Publish
+        run: dotnet publish -r ${{ matrix.target }} -c Release -p:Version=${{ github.event.release.tag_name }} -o publish-out
+ 
+      - name: Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: publish-out/${{ matrix.outname }}
