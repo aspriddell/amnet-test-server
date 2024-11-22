@@ -8,7 +8,7 @@ No documentation or support is provided except for the contents below.
 
 ### macOS
 > [!WARNING]
-> macOS will block the executable from running due gatekeeper.
+> macOS will block the executable from running due to gatekeeper.
 > If running the app, and it is killed, go to Privacy & Security settings and allow the app to run.
 
 ```shell
