@@ -58,17 +58,17 @@ public class Program
         {
             try
             {
-                var body = await JsonSerializer.DeserializeAsync<CardReadRequest>(ctx.Request.Body, SerializerContext.Default.CardReadRequest);
+                var body = await JsonSerializer.DeserializeAsync(ctx.Request.Body, SerializerContext.Default.CardReadRequest);
 
-                if (body?.MatrixCode.Count(char.IsAsciiDigit) == 20)
+                if (body?.AccessCode.Count(char.IsAsciiDigit) == 20)
                 {
                     ctx.Response.StatusCode = 202;
-                    app.Services.GetRequiredService<ILogger<Program>>().LogInformation("Card request received: {card}", body.MatrixCode);
+                    app.Services.GetRequiredService<ILogger<Program>>().LogInformation("Card request received: {card} (physical card idm: {idm})", body.AccessCode, body.PhysicalCardIDm ?? "none");
                 }
                 else
                 {
                     ctx.Response.StatusCode = 400;
-                    app.Services.GetRequiredService<ILogger<Program>>().LogWarning("Invalid card request received: {card}", body?.MatrixCode);
+                    app.Services.GetRequiredService<ILogger<Program>>().LogWarning("Invalid card request received: {card}", body?.AccessCode);
                 }
             }
             catch
@@ -89,7 +89,8 @@ public record SystemState(
     [property: JsonPropertyName("timeSinceLastPoll")] long? TimeSinceLastPoll);
 
 public record CardReadRequest(
-    [property: JsonPropertyName("cardId")] string MatrixCode);
+    [property: JsonPropertyName("cardId")] string AccessCode,
+    [property: JsonPropertyName("physicalCardIDm")] string PhysicalCardIDm);
 
 [JsonSerializable(typeof(SystemState))]
 [JsonSerializable(typeof(CardReadRequest))]
